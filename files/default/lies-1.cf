@@ -1,0 +1,65 @@
+#
+# Copyright 2012-2013, A Fistful of Servers
+# Author:: Sean OMeara <someara@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+body common control
+{
+  bundlesequence => { 
+    "bundle_one",
+    "bundle_two",
+    "bundle_three",
+  };
+  inputs => { "/var/cfengine/inputs/cfengine_stdlib.cf" };
+}
+
+bundle agent bundle_one
+{
+classes:
+  "puppet_bin_exists" expression =>
+    returnszero("/usr/bin/test -e /usr/bin/puppet", "noshell");
+
+commands:
+  "/bin/echo"
+    args => "hello from bundle_one. puppet_bin_does_not_exist.",
+    ifvarclass => "!puppet_bin_exists";
+}
+
+bundle agent bundle_two
+{
+packages:
+  "puppet"
+     comment => "puppet",
+     package_policy => "add",
+     package_method => apt,
+     classes => if_repaired("puppet_bin_exists");
+}
+
+bundle agent bundle_three
+{
+classes:
+  "puppet_bin_exists" expression =>
+    returnszero("/usr/bin/test -f /usr/bin/puppet", "noshell");
+
+commands:
+  "/bin/echo"
+    args => "hello from bundle_three. puppet_bin_exists.",
+    ifvarclass => "puppet_bin_exists";
+}
+
+# cf-agent -K -f /tmp/lies-1.cf -n
+
+
+
