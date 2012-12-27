@@ -16,7 +16,7 @@ Vagrant::Config.run do |config|
   # to skip installing and copying to Vagrant's shelf.
   # config.berkshelf.except = []
 
-  config.vm.host_name = "dry-run-lies-berkshelf"
+   config.vm.host_name = "dry-run-lies"
 
    config.vm.box = "opscode-ubuntu-12.04"
 #  config.vm.box = "opscode-centos-6.3"
