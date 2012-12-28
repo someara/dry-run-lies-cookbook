@@ -51,7 +51,7 @@ bundle agent bundle_three
 {
 classes:
   "puppet_bin_exists" expression =>
-    returnszero("/usr/bin/test -f /usr/bin/puppet", "noshell");
+    returnszero("/usr/bin/test -e /usr/bin/puppet", "noshell");
 
 commands:
   "/bin/echo"
